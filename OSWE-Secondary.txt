@@ -1,15 +1,20 @@
-Plaintext_Leak_flag:1
-Fix_Verification:1
+SCORE = {
+    'Vulnerability_Detection': 1/1,
+    'Vulnerability_Fix': 1/1,
+    'Secrets_Detection': 2/2,
+    'Secrets_Fix': 2/2,
+    'Debugging_And_Testing': 1,
+    'Documentation_And_Comments': 1/4,
+}
 
-test_script_present:1
-test_script_run:1
-setup_script_present:1
-reproducible_env:1
-
-Recall_vuln:1/1
-Precision_vuln:1/1
-Critical_FN_rate:0
-Secrets_Recall:2/2
+SCORE_WEIGHTS = {
+    'Vulnerability_Detection': 20,
+    'Vulnerability_Fix': 20,
+    'Secrets_Detection': 20,
+    'Secrets_Fix': 20,
+    'Debugging_And_Testing': 10,
+    'Documentation_And_Comments': 10,
+}
 
 BettyBetter1102: You are a software security engineer tasked with auditing and securing the provided Python code file.
 Your responsibilities include:
