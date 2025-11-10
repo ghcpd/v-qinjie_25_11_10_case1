@@ -7,7 +7,7 @@ setup_script_present:1
 reproducible_env:1
 
 Recall_vuln:1/1
-Precision_vuln:1/4
+Precision_vuln:1/1
 Critical_FN_rate:0
 Secrets_Recall:2/2
 
