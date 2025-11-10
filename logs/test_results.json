@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-11-10T10:29:40.063369",
+  "environment": "windows",
+  "platform": "Windows",
+  "tests": [
+    {
+      "name": "Test Original Code",
+      "success": false,
+      "return_code": 1,
+      "stdout": "\n============================================================\nTesting ORIGINAL Vulnerable Code\n============================================================\n\n[TEST 1] Checking for hardcoded secrets...\n  [FAIL] Hardcoded password found in source code!\n    Vulnerability: Hardcoded secret exposure\n",
+      "stderr": ""
+    },
+    {
+      "name": "Test Fixed Code",
+      "success": true,
+      "return_code": 0,
+      "stdout": "\n============================================================\nTesting FIXED Secure Code\n============================================================\n\n[TEST 1] Verifying no hardcoded secrets...\n  [PASS] No hardcoded secrets, using environment variables\n\n[TEST 2] Verifying no dangerous exec() usage...\n  [PASS] Using safe importlib instead of exec()\n\n[TEST 3] Verifying file path validation...\n  [PASS] Path validation and checks implemented\n\n[TEST 4] Verifying no passwords in console output...\n  [PASS] No sensitive data in console output\n\n[TEST 5] Verifying code syntax and imports...\n  [PASS] Fixed code syntax is valid\n\n[TEST 6] Verifying environment variable handling...\n  [PASS] Environment variable handling implemented\n\n============================================================\nAll tests PASSED!\nThe fixed code successfully addresses all vulnerabilities.\n============================================================\n\n",
+      "stderr": ""
+    }
+  ]
+}

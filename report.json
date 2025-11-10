@@ -1,0 +1,120 @@
+{
+  "security_audit_report": {
+    "scan_date": "2025-11-10",
+    "file_scanned": "input.py",
+    "vulnerabilities": [
+      {
+        "id": "SEC-001",
+        "type": "Hardcoded Secrets/Credentials",
+        "severity": "CRITICAL",
+        "file": "input.py",
+        "line_numbers": [3],
+        "description": "Hardcoded database password exposed in source code",
+        "code_snippet": "DB_PASSWORD = \"root_password123\"",
+        "risk": "Credentials embedded in source code can be discovered through code repositories, logs, or reverse engineering, allowing unauthorized database access.",
+        "remediation": "Move credentials to environment variables using os.getenv()",
+        "fixed_code": "DB_PASSWORD = os.getenv(\"DB_PASSWORD\")",
+        "fixed_file": "input_fixed.py",
+        "fixed_line": "12"
+      },
+      {
+        "id": "SEC-002",
+        "type": "Code Injection Vulnerability (exec)",
+        "severity": "CRITICAL",
+        "file": "input.py",
+        "line_numbers": [5, 6, 7, 8],
+        "description": "Use of exec() function to execute arbitrary code from user input",
+        "code_snippet": "def run_user_script(file_path):\n    with open(file_path, \"r\") as f:\n        content = f.read()\n        exec(content)",
+        "risk": "The exec() function executes arbitrary Python code. If file_path is user-controlled, attackers can execute malicious code. Even if file_path is predefined, storing executable code in files without validation is a security risk.",
+        "remediation": "Replace exec() with safer alternatives like importlib for controlled module loading, and add path validation to prevent directory traversal attacks.",
+        "fixed_code": "Use importlib.util.spec_from_file_location() with path validation checks",
+        "fixed_file": "input_fixed.py",
+        "fixed_lines": "15-45"
+      },
+      {
+        "id": "SEC-003",
+        "type": "Insecure File Handling",
+        "severity": "HIGH",
+        "file": "input.py",
+        "line_numbers": [5, 6, 7],
+        "description": "No validation of file path - vulnerable to path traversal/directory traversal attacks",
+        "code_snippet": "with open(file_path, \"r\") as f:",
+        "risk": "An attacker could provide a file path like '../../sensitive_file.py' to read/execute files outside the intended directory.",
+        "remediation": "Validate and resolve file paths using pathlib.Path.resolve() and check they are within allowed directories",
+        "fixed_code": "file_path = Path(file_path).resolve() with validation checks",
+        "fixed_file": "input_fixed.py",
+        "fixed_lines": "20-34"
+      },
+      {
+        "id": "SEC-004",
+        "type": "Information Disclosure",
+        "severity": "MEDIUM",
+        "file": "input.py",
+        "line_numbers": [11],
+        "description": "Password printed to stdout/logs",
+        "code_snippet": "print(f\"Connecting to DB with password: {DB_PASSWORD}\")",
+        "risk": "Passwords printed to console/logs can be exposed through: log aggregation services, shell history, CI/CD logs, or system monitoring tools.",
+        "remediation": "Remove password from output. Only log connection status without sensitive data.",
+        "fixed_code": "print(\"Connecting to DB with credentials from environment variable\")",
+        "fixed_file": "input_fixed.py",
+        "fixed_line": "51"
+      }
+    ],
+    "secrets_found": [
+      {
+        "id": "SECRET-001",
+        "type": "Database Password",
+        "severity": "CRITICAL",
+        "file": "input.py",
+        "line": 3,
+        "secret_value": "root_password123",
+        "secret_name": "DB_PASSWORD",
+        "remediation": "Move to environment variable or secure secret management system (e.g., AWS Secrets Manager, HashiCorp Vault)",
+        "status": "EXPOSED"
+      }
+    ],
+    "summary": {
+      "total_vulnerabilities": 4,
+      "critical": 2,
+      "high": 1,
+      "medium": 1,
+      "total_secrets": 1,
+      "remediation_status": "FIXED"
+    },
+    "fixes_applied": {
+      "fix_1": {
+        "vulnerability_id": "SEC-001",
+        "change": "Replaced hardcoded DB_PASSWORD with environment variable using os.getenv()",
+        "lines_affected": 3,
+        "new_lines": "12-13"
+      },
+      "fix_2": {
+        "vulnerability_id": "SEC-002",
+        "change": "Replaced exec() with importlib.util for safer module loading",
+        "lines_affected": "5-8",
+        "new_lines": "15-45"
+      },
+      "fix_3": {
+        "vulnerability_id": "SEC-003",
+        "change": "Added path validation and directory traversal prevention",
+        "lines_affected": "5-8",
+        "new_lines": "20-34"
+      },
+      "fix_4": {
+        "vulnerability_id": "SEC-004",
+        "change": "Removed password from console output",
+        "lines_affected": 11,
+        "new_lines": "51"
+      }
+    },
+    "recommendations": [
+      "Use a secret management system (e.g., AWS Secrets Manager, Azure Key Vault) in production",
+      "Implement code review process to catch hardcoded secrets before commit",
+      "Use static analysis tools like bandit, semgrep, or TruffleHog to detect secrets and vulnerabilities",
+      "Implement runtime security monitoring for suspicious code execution",
+      "Use environment variables or configuration files (not in version control) for sensitive data",
+      "Rotate all exposed secrets immediately",
+      "Add unit tests to verify security controls are in place"
+    ]
+  }
+}
