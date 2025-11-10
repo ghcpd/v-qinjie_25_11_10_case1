@@ -1,0 +1,6 @@
+Running security check on vulnerable version (should fail)
+Found 3 issues. See report_vulnerable.json
+Detected vulnerabilities as expected for vulnerable file. (exit 1
+Running security check on fixed version (should succeed)
+No issues found.
+All checks passed

@@ -1,0 +1,32 @@
+{
+  "file": "input_vulnerable.py",
+  "findings": [
+    {
+      "vuln_id": "V001",
+      "name": "Hardcoded DB password",
+      "severity": "HIGH",
+      "description": "Detects hardcoded database password variables in source code",
+      "file": "input_vulnerable.py",
+      "line": 2,
+      "snippet": ""
+    },
+    {
+      "vuln_id": "V002",
+      "name": "exec usage",
+      "severity": "CRITICAL",
+      "description": "Detects exec() calls which can execute arbitrary code",
+      "file": "input_vulnerable.py",
+      "line": 8,
+      "snippet": "exec(content)"
+    },
+    {
+      "vuln_id": "V003",
+      "name": "Cleartext password logging",
+      "severity": "MEDIUM",
+      "description": "Logs DB password to console",
+      "file": "input_vulnerable.py",
+      "line": 11,
+      "snippet": "print(f\"Connecting to DB with password: {DB_PASSWORD}\")"
+    }
+  ]
+}
