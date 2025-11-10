@@ -1,0 +1,56 @@
+{
+  "summary": "Security audit report for input.py",
+  "vulnerabilities": [
+    {
+      "id": "V001",
+      "name": "Hardcoded DB password",
+      "file": "input_vulnerable.py",
+      "lines": [3],
+      "severity": "HIGH",
+      "description": "A hard-coded credential is present in source code; storing credentials in source exposes them to source control and attackers.",
+      "recommendation": "Load database passwords from environment variables or a secrets manager at runtime. Remove any hardcoded passwords from source code."
+    },
+    {
+      "id": "V002",
+      "name": "Use of exec() on user-provided content",
+      "file": "input_vulnerable.py",
+      "lines": [6,7,8],
+      "severity": "CRITICAL",
+      "description": "Executing user-supplied code with exec() can lead to remote code execution and privilege escalation.",
+      "recommendation": "Avoid exec() entirely. If script execution is required, run scripts in an isolated subprocess with strict input validation, path checks, and timeouts."
+    },
+    {
+      "id": "V003",
+      "name": "Logging secrets in cleartext",
+      "file": "input_vulnerable.py",
+      "lines": [11],
+      "severity": "MEDIUM",
+      "description": "The database password is printed to stdout, which may be accessible and recorded in logs or monitoring systems.",
+      "recommendation": "Never print secrets; log a redacted confirmation or status message instead."
+    }
+  ],
+  "fixed_in": "input.py",
+  "fixes": [
+    {
+      "id": "F001",
+      "description": "Replace hard-coded credential with environment-based configuration",
+      "lines_changed": [3],
+      "replacement": "get_db_password() reading from os.environ",
+      "justification": "Avoids committing secrets into source control and allows use of secret management."
+    },
+    {
+      "id": "F002",
+      "description": "Replace exec() with subprocess.run and strict path validation",
+      "lines_changed": [6,7,8],
+      "replacement": "run_user_script() validates script location and runs it in a subprocess with timeout and captured output",
+      "justification": "Avoids arbitrary code execution in the process, prevents path traversal, and allows resource limits."
+    },
+    {
+      "id": "F003",
+      "description": "Remove cleartext password logging and use redacted logs",
+      "lines_changed": [11],
+      "replacement": "logging.info('Connecting to DB using configured password (redacted)')",
+      "justification": "Prevents secret exposure in logs."
+    }
+  ]
+}
