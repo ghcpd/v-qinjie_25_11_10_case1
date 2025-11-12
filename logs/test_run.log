@@ -1,0 +1,5 @@
+Security scan started 
+Scanning original_input.py for insecure patterns (should be vulnerable) 
+No findings 
+Scanning input.py for insecure patterns (should be clean) 
+No findings 
