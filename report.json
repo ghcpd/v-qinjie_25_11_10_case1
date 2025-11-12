@@ -1,0 +1,38 @@
+{
+  "summary": "Security audit and fixes for input.py",
+  "vulnerabilities": [
+    {
+      "id": "RCE-EXEC-001",
+      "file": "input.py",
+      "lines": [5,7,8],
+      "severity": "critical",
+      "description": "Use of exec() on arbitrary file content leads to remote code execution and arbitrary file/system access.",
+      "recommendation": "Do not exec untrusted code. Restrict execution only to trusted, signed scripts or a safe DSL. Implement input validation, execution in a sandboxed process, or avoid execution entirely.",
+      "secure_replacement": "run_user_script validates 'safe_scripts' path and allows only print() statements in a restricted global environment."
+    },
+    {
+      "id": "SECRET-HARD-002",
+      "file": "input.py",
+      "lines": [3],
+      "severity": "high",
+      "description": "Hard-coded database password in source code.",
+      "recommendation": "Use environment variables or secret managers for production credentials. Never store credentials in plain text inside the source repository.",
+      "secure_replacement": "get_db_password() reads from DB_PASSWORD environment variable; connect_database does not print the password.",
+      "fix_explanation": "Moved DB password out of source code. get_db_password() reads from environment and connect_database() logs a generic message, never prints the password. Use a secret manager for production."
+    },
+    {
+      "id": "INFO-LOG-003",
+      "file": "input.py",
+      "lines": [10],
+      "severity": "medium",
+      "description": "Sensitive information is printed to stdout which could leak secrets through logs.",
+      "recommendation": "Avoid printing secrets. Use secure logging and redaction; store secrets in memory only when needed.",
+      "secure_replacement": "connect_database logs a generic message without including the password."
+    }
+  ],
+  "notes": "Run tests with 'python -m pytest' or 'python run_all_tests.py'. The original code is saved as input_original.py for repro. Environment variable DB_PASSWORD must be set for the repaired program to connect. The run_test script has modes 'original' or 'repaired' to assert the vulnerability and the fix respectively.",
+  "verification": {
+    "original_expected_result": "input_original.py will execute user_script.py and create exploit_marker.txt",
+    "repaired_expected_result": "input.py will not execute root-level user_script.py; only safe scripts under safe_scripts/ are allowed; DB_PASSWORD is read from the environment and not logged."
+  }
+}
